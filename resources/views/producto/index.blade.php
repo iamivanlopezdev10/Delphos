@@ -21,16 +21,6 @@
                             </button>
                         </div>
                     </div>
-
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success m-4 alert-dismissible fade show" role="alert">
-                            <i class="fa fa-check-circle"></i> {{ $message }}
-                            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
-
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover table-bordered">

@@ -13,12 +13,10 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        // Obtener los clientes paginados
-        $clientes = Cliente::paginate(10);  // Aquí defines el número de elementos por página (10, por ejemplo)
-        
-        return view('cliente.index', compact('clientes'))
-            ->with('i', (request()->input('page', 1) - 1) * $clientes->perPage());
+        $clientes = Cliente::all();  // Obtiene todos los clientes
+        return view('cliente.index', compact('clientes'));  // Asegúrate de pasar 'clientes' a la vista
     }
+    
     
     /**
      * Show the form for creating a new resource.
@@ -43,42 +41,30 @@ class ClienteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $cliente = Cliente::find($id);
-
-        // Verificar si el cliente existe
-        if (!$cliente) {
-            return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
-        }
-
-        return view('cliente.show', compact('cliente'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        $cliente = Cliente::findOrFail($id);
-        return view('clientes.edit', compact('cliente'));
+        $cliente = Cliente::findOrFail($id);  // Encuentra el cliente por ID
+        return view('cliente.index', compact('cliente'));  // Pasa el cliente a la vista
     }
-
+    
+    public function show($id)
+    {
+        $cliente = Cliente::findOrFail($id);  // Encuentra el cliente por ID
+        return view('cliente.index', compact('cliente'));  // Pasa el cliente a la vista
+    }
+    
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
-        // Asegúrate de que el cliente sea encontrado antes de intentar actualizarlo
-        $cliente = Cliente::findOrFail($id);  // Encuentra el cliente o falla si no lo encuentra
+        $cliente = Cliente::findOrFail($id);  // Encuentra el cliente por ID
     
-        // Actualiza los datos del cliente con los nuevos datos del formulario
-        $cliente->update($request->all());
+        $cliente->update($request->all());  // Actualiza el cliente con los nuevos datos
     
-        // Redirige a la lista de clientes con un mensaje de éxito
-        return redirect()->route('clientes.index')
-            ->with('success', 'Cliente actualizado correctamente.');
+        return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente.');
     }
+    
     
 
     /**

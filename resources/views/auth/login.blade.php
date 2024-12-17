@@ -11,7 +11,6 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <!-- Estilos adicionales si los necesitas -->
     <style>
         .field-icon {
             position: absolute;
@@ -41,11 +40,11 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <!-- Campo de Email -->
+                    <!-- Campo de Nombre de usuario -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">{{ __('Dirección de correo electrónico') }}</label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                        @error('email')
+                        <label for="name" class="form-label">{{ __('Nombre de usuario') }}</label>
+                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        @error('name')
                             <div class="invalid-feedback">
                                 <strong>{{ $message }}</strong>
                             </div>
@@ -56,10 +55,8 @@
                     <div class="mb-3 position-relative">
                         <label for="password" class="form-label">{{ __('Contraseña') }}</label>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
                         <!-- Icono de Ojo para alternar visibilidad de la contraseña -->
                         <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-
                         @error('password')
                             <div class="invalid-feedback">
                                 <strong>{{ $message }}</strong>
@@ -100,7 +97,6 @@
 
     <!-- Script para alternar visibilidad de la contraseña -->
     <script>
-        // Alternar visibilidad de la contraseña
         $(".toggle-password").click(function() {
             $(this).toggleClass("fa-eye fa-eye-slash");
             var input = $($(this).attr("toggle"));

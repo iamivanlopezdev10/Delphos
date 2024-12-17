@@ -26,6 +26,19 @@ class Ordencompra extends Model
 
     protected $fillable = ['clave_orden', 'fecha', 'estado', 'proveedor_id'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($ordenCompra) {
+            // Generamos la clave_orden antes de crear la orden
+            $ultimo = self::latest('id')->first(); // Obtenemos la última orden creada
+            $numeroOrden = $ultimo ? intval(substr($ultimo->clave_orden, 1)) + 1 : 1; // Si no hay orden, empezamos desde 1
+
+            // Formateamos la clave con 6 dígitos
+            $ordenCompra->clave_orden = str_pad($numeroOrden, 6, '0', STR_PAD_LEFT);
+        });
+    }
     /**
      * Relación uno a muchos con Detalleordencompra.
      */
