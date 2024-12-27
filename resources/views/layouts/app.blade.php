@@ -54,9 +54,6 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('ordencompras.index') }}">
-                                    Generar Orden
-                                </a>
-                                <a class="dropdown-item" href="{{ route('ordencompras.index') }}">
                                     Ver Órdenes
                                 </a>
                                 <a class="dropdown-item" href="{{ route('detalleordencompras.index') }}">

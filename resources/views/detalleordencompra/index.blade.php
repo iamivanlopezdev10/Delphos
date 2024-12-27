@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Detalle de Orden de Compra
+    Detalles de la Orden de Compra
 @endsection
 
 @section('content')

@@ -274,13 +274,20 @@ public function edit($id)
         }
     }
 
+    
 
     public function getProductosPorProveedor($proveedorId)
     {
-        // Obtener los productos asociados al proveedor seleccionado
+        // Obtener los productos asociados a este proveedor
         $productos = Producto::where('proveedor_id', $proveedorId)->get();
-
-        // Retornar los productos en formato JSON
-        return response()->json($productos);
+    
+        // Verificar si hay productos y devolver la respuesta correcta
+        if ($productos->isEmpty()) {
+            return response()->json(['productos' => []], 200);
+        }
+    
+        // Devolver los productos en formato JSON
+        return response()->json(['productos' => $productos]);
     }
+    
 }

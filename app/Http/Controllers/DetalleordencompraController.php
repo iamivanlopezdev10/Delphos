@@ -13,7 +13,8 @@ class DetalleordencompraController extends Controller
      * Muestra la lista de detalles de órdenes de compra.
      */
     public function index()
-    {
+    {   
+        
         $detalleOrdenCompras = DetalleOrdenCompra::with('producto', 'ordencompra')->paginate(10);
         return view('detalleordencompra.index', compact('detalleOrdenCompras'));
     }

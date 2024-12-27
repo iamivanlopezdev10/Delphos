@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Órdenes de Compra Pendientes
+    Órdenes de Compras
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
                     <div class="card-header bg-primary text-white">
                         <div class="d-flex justify-content-between align-items-center">
                             <span id="card_title">
-                                <i class="fa fa-shopping-cart"></i> {{ __('Órdenes de Compra Pendientes') }}
+                                <i class="fa fa-shopping-cart"></i> {{ __('Órdenes de Compras') }}
                             </span>
                             <div class="float-right">
                                 <!-- Botón para abrir el modal -->
@@ -118,13 +118,15 @@
                                                 <div class="col-md-8">
                                                     <select class="form-control" name="productos[0][producto_id]" required>
                                                         <option value="">Seleccione un Producto</option>
-                                                        @foreach ($productos as $producto)
-                                                            <option value="{{ $producto->id }}">{{ $producto->descripcion }}</option>
-                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <input type="number" class="form-control" name="productos[0][cantidad]" placeholder="Cantidad" min="1" required>
+                                                </div>
+                                                <div class="col-md-12 mt-2">
+                                                    <button type="button" class="btn btn-danger btn-sm remove-product-btn" onclick="removeProducto(0)">
+                                                        <i class="fa fa-trash"></i> Eliminar Producto
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,41 +143,128 @@
                         </div>
                     </div>
 
+                    <!-- Modal de Alerta (cuando no hay productos disponibles) -->
+                    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="alertModalLabel">¡Advertencia!</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Este proveedor no tiene productos disponibles.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 @endsection
 
-@section('scripts')
 <script>
-    let productCount = 1;  // Inicia con 1 producto por defecto
-
     document.addEventListener('DOMContentLoaded', function() {
-        const addProductButton = document.getElementById('add-product-btn');
+        const proveedorSelect = document.getElementById('proveedor_id');
         const productosContainer = document.getElementById('productos-container');
+        const addProductBtn = document.getElementById('add-product-btn');
 
-        addProductButton.addEventListener('click', () => {
-            productCount++;
+        let productoIndex = 0; // Controlar el índice de los productos
 
-            const newProduct = document.createElement('div');
-            newProduct.classList.add('form-row', 'mb-3', 'producto-item');
-            newProduct.setAttribute('id', `producto-${productCount}`);
-            newProduct.innerHTML = `
+        // Función para cargar productos del proveedor
+        function cargarProductos(proveedorId, inicial = true) {
+            if (!proveedorId) return;
+
+            fetch(`/api/productos-por-proveedor/${proveedorId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.productos.length > 0) {
+                        if (inicial) {
+                            productosContainer.innerHTML = ''; // Limpiar productos actuales
+                            agregarProducto(data.productos, productoIndex);
+                        }
+                    } else {
+                        // Mostrar el modal de alerta cuando no haya productos disponibles
+                        $('#alertModal').modal('show');
+                    }
+                })
+                .catch(error => console.error('Error al cargar productos:', error));
+        }
+
+        // Función para agregar un producto al contenedor
+        function agregarProducto(productos, index) {
+            const productoDiv = document.createElement('div');
+            productoDiv.classList.add('form-row', 'mb-3', 'producto-item');
+            productoDiv.setAttribute('id', `producto-${index}`);
+
+            const opciones = productos.map(producto =>
+                `<option value="${producto.id}">${producto.descripcion}</option>`).join('');
+
+            productoDiv.innerHTML = `
                 <div class="col-md-8">
-                    <select class="form-control" name="productos[${productCount - 1}][producto_id]" required>
+                    <select class="form-control" name="productos[${index}][producto_id]" required>
                         <option value="">Seleccione un Producto</option>
-                        @foreach ($productos as $producto)
-                            <option value="{{ $producto->id }}">{{ $producto->descripcion }}</option>
-                        @endforeach
+                        ${opciones}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <input type="number" class="form-control" name="productos[${productCount - 1}][cantidad]" placeholder="Cantidad" min="1" required>
+                    <input type="number" class="form-control" name="productos[${index}][cantidad]" placeholder="Cantidad" min="1" required>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <button type="button" class="btn btn-danger btn-sm remove-product-btn" onclick="removeProducto(${index})">
+                        <i class="fa fa-trash"></i> Eliminar Producto
+                    </button>
                 </div>
             `;
-            productosContainer.appendChild(newProduct);
+
+            productosContainer.appendChild(productoDiv);
+        }
+
+        // Cargar productos al cambiar proveedor
+        proveedorSelect.addEventListener('change', function() {
+            const proveedorId = proveedorSelect.value;
+            if (proveedorId) {
+                productoIndex = 0; // Reiniciar índice
+                cargarProductos(proveedorId);
+            } else {
+                productosContainer.innerHTML = '';
+            }
         });
+
+        // Agregar más productos manualmente
+        addProductBtn.addEventListener('click', function() {
+            const proveedorId = proveedorSelect.value;
+
+            if (proveedorId) {
+                fetch(`/api/productos-por-proveedor/${proveedorId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.productos.length > 0) {
+                            productoIndex++; // Incrementar índice
+                            agregarProducto(data.productos, productoIndex);
+                        } else {
+                            // Mostrar el modal de alerta cuando no haya productos disponibles
+                            $('#alertModal').modal('show');
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar productos:', error));
+            } else {
+                alert('Debe seleccionar un proveedor primero.');
+            }
+        });
+
+        // Función para eliminar producto
+        window.removeProducto = function(index) {
+            const productoDiv = document.getElementById(`producto-${index}`);
+            if (productoDiv) {
+                productoDiv.remove();
+            }
+        };
     });
 </script>
-

@@ -28,6 +28,9 @@
                                     <tr>
                                         <th>Clave Producto</th>
                                         <th>Descripción</th>
+                                        <th>Procedencia</th>
+                                        <th>Tipo</th>
+                                        <th>Clasificación</th>
                                         <th>Stock</th>
                                         <th>Precio Unitario</th>
                                         <th>Proveedor</th>
@@ -40,8 +43,11 @@
                                         <tr class="hoverable">
                                             <td>{{ $producto->clave_producto }}</td>
                                             <td>{{ $producto->descripcion }}</td>
+                                            <td>{{ $producto->procedencia }}</td>
+                                            <td>{{ $producto->tipo }}</td>
+                                            <td>{{ $producto->clasificacion }}</td>
                                             <td>{{ $producto->stock }}</td>
-                                            <td>{{ $producto->precio_unitario }}</td>
+                                            <td>${{ number_format($producto->precio_unitario, 2) }}</td>
                                             <td>{{ $producto->proveedore->nombre }}</td>
                                             <td>
                                                 <span class="badge {{ $producto->habilitado ? 'badge-success' : 'badge-danger' }}">
@@ -52,14 +58,14 @@
                                             <td>
                                                 <form action="{{ route('productos.destroy', $producto->id) }}" method="POST">
                                                     <!-- Ver Producto -->
-                                                    <a class="btn btn-info btn-sm" href="{{ route('productos.show', $producto->id) }}">
+                                                    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewProductModal{{ $producto->id }}">
                                                         <i class="fa fa-eye"></i>
-                                                    </a>
+                                                    </button>
 
                                                     <!-- Editar Producto -->
-                                                    <a class="btn btn-warning btn-sm" href="{{ route('productos.edit', $producto->id) }}">
+                                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal{{ $producto->id }}">
                                                         <i class="fa fa-edit"></i>
-                                                    </a>
+                                                    </button>
 
                                                     <!-- Eliminar Producto -->
                                                     @csrf
@@ -70,6 +76,99 @@
                                                 </form>
                                             </td>
                                         </tr>
+
+                                        <!-- Modal Ver Producto -->
+                                        <div class="modal fade" id="viewProductModal{{ $producto->id }}" tabindex="-1" aria-labelledby="viewProductModalLabel{{ $producto->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="viewProductModalLabel{{ $producto->id }}">Ver Producto: {{ $producto->descripcion }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>Clave Producto:</strong> {{ $producto->clave_producto }}</p>
+                                                        <p><strong>Descripción:</strong> {{ $producto->descripcion }}</p>
+                                                        <p><strong>Procedencia:</strong> {{ $producto->procedencia }}</p>
+                                                        <p><strong>Tipo:</strong> {{ $producto->tipo }}</p>
+                                                        <p><strong>Clasificación:</strong> {{ $producto->clasificacion }}</p>
+                                                        <p><strong>Stock:</strong> {{ $producto->stock }}</p>
+                                                        <p><strong>Precio Unitario:</strong> ${{ number_format($producto->precio_unitario, 2) }}</p>
+                                                        <p><strong>Proveedor:</strong> {{ $producto->proveedore->nombre }}</p>
+                                                        <p><strong>Habilitado:</strong> {{ $producto->habilitado ? 'Sí' : 'No' }}</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal Editar Producto -->
+                                        <div class="modal fade" id="editProductModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ $producto->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editProductModalLabel{{ $producto->id }}">Editar Producto: {{ $producto->descripcion }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form action="{{ route('productos.update', $producto->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="clave_producto" class="form-label">Clave Producto</label>
+                                                                <input type="text" name="clave_producto" class="form-control" value="{{ $producto->clave_producto }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="descripcion" class="form-label">Descripción</label>
+                                                                <input type="text" name="descripcion" class="form-control" value="{{ $producto->descripcion }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="procedencia" class="form-label">Procedencia</label>
+                                                                <input type="text" name="procedencia" class="form-control" value="{{ $producto->procedencia }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="tipo" class="form-label">Tipo</label>
+                                                                <input type="text" name="tipo" class="form-control" value="{{ $producto->tipo }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="clasificacion" class="form-label">Clasificación</label>
+                                                                <input type="text" name="clasificacion" class="form-control" value="{{ $producto->clasificacion }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="stock" class="form-label">Stock</label>
+                                                                <input type="number" name="stock" class="form-control" value="{{ $producto->stock }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="precio_unitario" class="form-label">Precio Unitario</label>
+                                                                <input type="number" name="precio_unitario" class="form-control" value="{{ $producto->precio_unitario }}" step="0.01" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="habilitado" class="form-label">Habilitado</label>
+                                                                <select name="habilitado" class="form-control" required>
+                                                                    <option value="1" {{ $producto->habilitado ? 'selected' : '' }}>Sí</option>
+                                                                    <option value="0" {{ !$producto->habilitado ? 'selected' : '' }}>No</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="proveedor_id" class="form-label">Proveedor</label>
+                                                                <select name="proveedor_id" class="form-control" required>
+                                                                    @foreach($proveedores as $proveedore)
+                                                                        <option value="{{ $proveedore->id }}" {{ $proveedore->id == $producto->proveedor_id ? 'selected' : '' }}>
+                                                                            {{ $proveedore->nombre }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -91,71 +190,78 @@
             <form action="{{ route('productos.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <!-- Formulario Horizontal -->
+                    <!-- Fila de Campos en Horizontal -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="clave_producto" class="form-label">{{ __('Clave Producto') }}</label>
+                                <label for="clave_producto" class="form-label">Clave Producto</label>
                                 <input type="text" name="clave_producto" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="descripcion" class="form-label">{{ __('nombre') }}</label>
+                                <label for="descripcion" class="form-label">Descripción</label>
                                 <input type="text" name="descripcion" class="form-control" required>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Fila de Campos en Horizontal -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="procedencia" class="form-label">{{ __('Procedencia') }}</label>
+                                <label for="procedencia" class="form-label">Procedencia</label>
                                 <input type="text" name="procedencia" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="tipo" class="form-label">{{ __('Tipo') }}</label>
+                                <label for="tipo" class="form-label">Tipo</label>
                                 <input type="text" name="tipo" class="form-control" required>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Fila de Campos en Horizontal -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="clasificacion" class="form-label">{{ __('Clasificación') }}</label>
+                                <label for="clasificacion" class="form-label">Clasificación</label>
                                 <input type="text" name="clasificacion" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="stock" class="form-label">{{ __('Stock') }}</label>
-                                <!-- Aquí agregamos value="0" para poner el valor predeterminado -->
-                                <input type="number" name="stock" class="form-control" value="0" required>
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="number" name="stock" class="form-control" value="0" required readonly>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Fila de Campos en Horizontal -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="precio_unitario" class="form-label">{{ __('Precio Unitario') }}</label>
-                                <input type="number" step="0.01" name="precio_unitario" class="form-control" required>
+                                <label for="precio_unitario" class="form-label">Precio Unitario</label>
+                                <input type="number" name="precio_unitario" class="form-control" step="0.01" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="habilitado" class="form-label">{{ __('Habilitado') }}</label>
+                                <label for="habilitado" class="form-label">Habilitado</label>
                                 <select name="habilitado" class="form-control" required>
-                                    <option value="1">{{ __('Sí') }}</option>
-                                    <option value="0">{{ __('No') }}</option>
+                                    <option value="1">Sí</option>
+                                    <option value="0">No</option>
                                 </select>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Fila de Campos en Horizontal -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="proveedor_id" class="form-label">{{ __('Proveedor') }}</label>
+                                <label for="proveedor_id" class="form-label">Proveedor</label>
                                 <select name="proveedor_id" class="form-control" required>
                                     @foreach($proveedores as $proveedore)
                                         <option value="{{ $proveedore->id }}">{{ $proveedore->nombre }}</option>
@@ -166,8 +272,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cerrar') }}</button>
-                    <button type="submit" class="btn btn-primary">{{ __('Guardar Producto') }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Producto</button>
                 </div>
             </form>
         </div>

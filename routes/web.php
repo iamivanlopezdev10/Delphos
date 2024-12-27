@@ -61,6 +61,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('detalleordencompras/{id}/finalizar', [DetalleordencompraController::class, 'finalizarOrden'])->name('detalleordencompras.finalizarOrden');
     Route::put('/ordencompras/{id}/finalizar', [OrdenCompraController::class, 'finalizarOrden'])->name('ordencompras.finalizarOrden');
     Route::get('productos-por-proveedor/{proveedorId}', [OrdencompraController::class, 'getProductosPorProveedor'])->name('productos.porProveedor');
+    // Asegúrate de que la ruta esté definida correctamente en el archivo web.php
+    Route::post('detalleordencompras/{detalleId}/actualizarCantidadRecibida', [DetalleOrdenCompraController::class, 'actualizarCantidadRecibida'])->name('detalleordencompras.actualizarCantidadRecibida');
+    Route::post('detalleordencompras/{detalleId}/actualizarCantidadRecibida', [DetalleOrdenCompraController::class, 'actualizarCantidadRecibida'])->name('detalleordencompras.actualizarCantidadRecibida');
+    Route::post('detalleordencompras/{detalleId}/actualizarCantidadRecibida', [DetalleOrdenCompraController::class, 'actualizarCantidadRecibida'])->name('detalleordencompras.actualizarCantidadRecibida');
 
-
-});
+    Route::get('productos/{proveedor}', [OrdenCompraController::class, 'getProductos'])->name('productos.byProveedor');
+    Route::get('ordencompras/productos/{proveedorId}', [OrdencompraController::class, 'getProductosPorProveedor'])->name('ordencompras.productos');
+    Route::get('/api/productos-por-proveedor/{proveedorId}', [OrdencompraController::class, 'getProductosPorProveedor']);
+}); 

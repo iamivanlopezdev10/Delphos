@@ -1,9 +1,7 @@
 @extends('layouts.app')
-
 @section('template_title')
     Proveedores
 @endsection
-
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -207,92 +205,128 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal para crear un nuevo proveedor -->
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="createModalLabel"><i class="fa fa-plus-circle"></i> {{ __('Crear Nuevo Proveedor') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('proveedores.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="clave_proveedor">{{ __('Clave Proveedor') }}</label>
-                                <input type="text" name="clave_proveedor" class="form-control form-control-sm" id="clave_proveedor" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="nombre">{{ __('Nombre') }}</label>
-                                <input type="text" name="nombre" class="form-control form-control-sm" id="nombre" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="rfc">{{ __('RFC') }}</label>
-                                <input type="text" name="rfc" class="form-control form-control-sm" id="rfc" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="codigo_postal">{{ __('Código Postal') }}</label>
-                                <input type="text" name="codigo_postal" class="form-control form-control-sm" id="codigo_postal" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="estado">{{ __('Estado') }}</label>
-                                <input type="text" name="estado" class="form-control form-control-sm" id="estado" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="correo_ordenes">{{ __('Correo Órdenes') }}</label>
-                                <input type="email" name="correo_ordenes" class="form-control form-control-sm" id="correo_ordenes" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="correo_pagos">{{ __('Correo Pagos') }}</label>
-                                <input type="email" name="correo_pagos" class="form-control form-control-sm" id="correo_pagos" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="banco">{{ __('Banco') }}</label>
-                                <input type="text" name="banco" class="form-control form-control-sm" id="banco" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="numero_cuenta">{{ __('Número Cuenta') }}</label>
-                                <input type="text" name="numero_cuenta" class="form-control form-control-sm" id="numero_cuenta" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="cuenta_interbancaria">{{ __('Cuenta Interbancaria') }}</label>
-                                <input type="text" name="cuenta_interbancaria" class="form-control form-control-sm" id="cuenta_interbancaria" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="telefono">{{ __('Teléfono') }}</label>
-                                <input type="text" name="telefono" class="form-control form-control-sm" id="telefono" required>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="habilitado">{{ __('Habilitado') }}</label>
-                                <select name="habilitado" id="habilitado" class="form-control form-control-sm" required>
-                                    <option value="1">Sí</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{{ __('Cerrar') }}</button>
-                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Guardar') }}</button>
-                    </div>
-                </form>
+<!-- Modal para crear un nuevo proveedor -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="createModalLabel"><i class="fa fa-plus-circle"></i> {{ __('Crear Nuevo Proveedor') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="cancelCreate">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <form action="{{ route('proveedores.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="clave_proveedor">{{ __('Clave Proveedor') }}</label>
+                            <input type="text" name="clave_proveedor" class="form-control form-control-sm" id="clave_proveedor" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="nombre">{{ __('Nombre') }}</label>
+                            <input type="text" name="nombre" class="form-control form-control-sm" id="nombre" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="rfc">{{ __('RFC') }}</label>
+                            <input type="text" name="rfc" class="form-control form-control-sm" id="rfc" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="codigo_postal">{{ __('Código Postal') }}</label>
+                            <input type="text" name="codigo_postal" class="form-control form-control-sm" id="codigo_postal" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="estado">{{ __('Estado') }}</label>
+                            <select name="estado" class="form-control form-control-sm" id="estado" required>
+                                <option value="" disabled selected>Selecciona un Estado</option>
+                                @php
+                                    $estadosMexico = [
+                                        'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chihuahua', 
+                                        'Coahuila de Zaragoza', 'Chiapas', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 
+                                        'México', 'Michoacán de Ocampo', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 
+                                        'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 
+                                        'Tamaulipas', 'Tlaxcala', 'Veracruz de Ignacio de la Llave', 'Yucatán', 'Zacatecas'
+                                    ];
+                                @endphp
+                                @foreach($estadosMexico as $estado)
+                                    <option value="{{ $estado }}">{{ $estado }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="correo_ordenes">{{ __('Correo Órdenes') }}</label>
+                            <input type="email" name="correo_ordenes" class="form-control form-control-sm" id="correo_ordenes" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="correo_pagos">{{ __('Correo Pagos') }}</label>
+                            <input type="email" name="correo_pagos" class="form-control form-control-sm" id="correo_pagos" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="banco">{{ __('Banco') }}</label>
+                            <select name="banco" class="form-control form-control-sm" id="banco" required>
+                                <option value="" disabled selected>Selecciona un Banco</option>
+                                @php
+                                    $bancosMexico = [
+                                        'BBVA', 'Banorte', 'Citibanamex', 'Santander', 'HSBC', 'Scotiabank', 
+                                        'BanBajío', 'Inbursa', 'Bansefi', 'Banco Azteca', 'Monex', 'Banjército', 
+                                        'IXE', 'Compartamos Banco', 'Afirme', 'Actinver', 'Banco del Bajío', 
+                                        'Banco del Pacifico', 'Banca Mifel', 'Volkswagen Bank', 'Banco Ve por Más'
+                                    ];
+                                @endphp
+                                @foreach($bancosMexico as $banco)
+                                    <option value="{{ $banco }}">{{ $banco }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="numero_cuenta">{{ __('Número Cuenta') }}</label>
+                            <input type="text" name="numero_cuenta" class="form-control form-control-sm" id="numero_cuenta" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="cuenta_interbancaria">{{ __('Cuenta Interbancaria') }}</label>
+                            <input type="text" name="cuenta_interbancaria" class="form-control form-control-sm" id="cuenta_interbancaria" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="telefono">{{ __('Teléfono') }}</label>
+                            <input type="text" name="telefono" class="form-control form-control-sm" id="telefono" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="habilitado">{{ __('Habilitado') }}</label>
+                            <select name="habilitado" id="habilitado" class="form-control form-control-sm" required>
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" id="cancelCreate">{{ __('Cerrar') }}</button>
+                    <button type="submit" class="btn btn-primary btn-sm">{{ __('Guardar') }}</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 @endsection
 
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Resetear el formulario cuando se cierra el modal
+        $('#createModal, #editModal').on('hidden.bs.modal', function () {
+            $(this).find('form')[0].reset(); // Resetear el formulario
+        });
+    </script>
 @endsection
+
+
+
