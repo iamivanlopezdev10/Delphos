@@ -69,4 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('productos/{proveedor}', [OrdenCompraController::class, 'getProductos'])->name('productos.byProveedor');
     Route::get('ordencompras/productos/{proveedorId}', [OrdencompraController::class, 'getProductosPorProveedor'])->name('ordencompras.productos');
     Route::get('/api/productos-por-proveedor/{proveedorId}', [OrdencompraController::class, 'getProductosPorProveedor']);
+    Route::get('ordencompra/{id}/pdf', [OrdencompraController::class, 'generarPDF'])->name('ordencompra.pdf');
+    Route::get('ventas/{id}/pdf', [VentaController::class, 'generarPDF'])->name('ventas.pdf');
+
+
 }); 

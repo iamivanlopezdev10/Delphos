@@ -8,6 +8,9 @@ use App\Models\Proveedore;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF; // Esto es para utilizar el alias que registramos
+
+
 
 class OrdencompraController extends Controller
 {
@@ -289,5 +292,24 @@ public function edit($id)
         // Devolver los productos en formato JSON
         return response()->json(['productos' => $productos]);
     }
+    public function generarPDF($id)
+    {
+        // Buscar la orden de compra por su ID
+        $ordenCompra = OrdenCompra::find($id);
     
+        // Verificar si se encuentra la orden
+        if (!$ordenCompra) {
+            return redirect()->back()->with('error', 'Orden de compra no encontrada.');
+        }
+    
+        // Cargar la vista 'ordencompras.pdf' y pasarle los datos de la orden de compra
+        // Asegúrate de usar la variable correcta '$ordenCompra' en 'compact()'
+        $pdf = PDF::loadView('ordencompra.pdf', compact('ordenCompra'));
+    
+        // Descargar el PDF con el nombre 'orden_compra.pdf'
+        return $pdf->download('orden_compra.pdf');
+    }
+    
+
+
 }

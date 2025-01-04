@@ -47,14 +47,21 @@
                                             </td>
                                             <td>
                                                 <form action="{{ route('ordencompras.destroy', $orden->id) }}" method="POST">
+                                                    <!-- Ver -->
                                                     <a class="btn btn-sm btn-info" href="{{ route('ordencompras.show', $orden->id) }}">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
+                                                    <!-- Editar -->
                                                     <a class="btn btn-sm btn-warning" href="{{ route('ordencompras.edit', $orden->id) }}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
+                                                    <!-- PDF -->
+                                                    <a class="btn btn-sm btn-danger" href="{{ route('ordencompra.pdf', $orden->id) }}" target="_blank">
+                                                        <i class="fa fa-file-pdf"></i>
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
+                                                    <!-- Eliminar -->
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="fa fa-trash"></i>
                                                     </button>

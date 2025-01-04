@@ -51,6 +51,10 @@
                                                     <a class="btn btn-sm btn-warning" href="{{ route('ventas.edit', $venta->id) }}">
                                                         <i class="fa fa-fw fa-edit"></i>
                                                     </a>
+                                                    <!-- Botón o enlace para generar el PDF -->
+                                                    <a href="{{ route('ventas.pdf', $venta->id) }}" class="btn btn-sm btn-danger" target="_blank">
+                                                        <i class="fa fa-file-pdf"></i> 
+                                                    </a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">

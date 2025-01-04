@@ -7,6 +7,8 @@ use App\Models\Producto;
 use App\Models\Detalleventa;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use PDF; // Esto es para utilizar el alias que registramos
+
 
 class VentaController extends Controller
 {
@@ -140,5 +142,16 @@ class VentaController extends Controller
         Venta::find($id)->delete();
 
         return redirect()->route('ventas.index')->with('success', 'Venta eliminada con éxito');
+    }
+    public function generarPDF($id)
+    {
+        // Obtener la venta con su cliente y los detalles
+        $venta = Venta::with(['cliente', 'detalleventas.producto'])->findOrFail($id);
+
+        // Generar el PDF usando la vista 'venta.pdf'
+        $pdf = PDF::loadView('venta.pdf', compact('venta'));
+
+        // Descargar el archivo PDF
+        return $pdf->download('Pdf_Venta' . $venta->clave_venta . '.pdf');
     }
 }
